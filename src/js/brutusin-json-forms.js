@@ -188,25 +188,50 @@ if (typeof brutusin === "undefined") {
                     appendChild(input, option, s);
                 }
                 var selectedIndex = 0;
-                for (var i = 0; i < s.enum.length; i++) {
-                    var option = document.createElement("option");
-                    var textNode = document.createTextNode(s.enum[i]);
-                    option.value = s.enum[i];
-                    appendChild(option, textNode, s);
-                    appendChild(input, option, s);
-                    if (value && s.enum[i] === value) {
-                        selectedIndex = i;
-                        if (!s.required) {
-                            selectedIndex++;
+                if (s.enum.constructor === Array)
+                {
+                    //The original code
+                    for (var i = 0; i < s.enum.length; i++) {
+                        var option = document.createElement("option");
+                        var textNode = document.createTextNode(s.enum[i]);
+                        option.value = s.enum[i];
+                        appendChild(option, textNode, s);
+                        appendChild(input, option, s);
+                        if (value && s.enum[i] === value) {
+                            selectedIndex = i;
+                            if (!s.required) {
+                                selectedIndex++;
+                            }
+                            if (s.readOnly)
+                                input.disabled = true;
                         }
-                        if (s.readOnly)
-                            input.disabled = true;
+                    }
+                }
+                else
+                {
+                    //Is a key-Value Object
+                    for (i in s.enum) {
+                        i = Number(i);
+                        var option = document.createElement("option");
+                        var textNode = document.createTextNode(s.enum[i]);
+                        option.value = i;
+                        appendChild(option, textNode, s);
+                        appendChild(input, option, s);
+                        if (value && i === value) {
+                            selectedIndex = i;
+                            /*if (!s.required)
+                                selectedIndex++;*/
+                            if (s.readOnly)
+                                input.disabled = true;
+                        }
                     }
                 }
                 if (s.enum.length === 1)
                     input.selectedIndex = 0;
                 else
-                    input.selectedIndex = selectedIndex;
+                    $(input).val(selectedIndex);
+                    //console.log($(input).val());
+                    //input.selectedIndex = selectedIndex; Original Line
             } else {
                 input = document.createElement("input");
                 if (s.type === "integer" || s.type === "number") {
