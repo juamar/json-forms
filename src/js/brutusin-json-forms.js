@@ -206,6 +206,10 @@ if (typeof brutusin === "undefined") {
                                 input.disabled = true;
                         }
                     }
+                    if (s.enum.length === 1)
+                        input.selectedIndex = 0;
+                    else
+                        input.selectedIndex = selectedIndex;
                 }
                 else
                 {
@@ -217,21 +221,19 @@ if (typeof brutusin === "undefined") {
                         option.value = i;
                         appendChild(option, textNode, s);
                         appendChild(input, option, s);
-                        if (value && i === value) {
-                            selectedIndex = i;
+                        if (value && i == value) {
+                            option.selected = true;
                             /*if (!s.required)
                                 selectedIndex++;*/
                             if (s.readOnly)
                                 input.disabled = true;
                         }
                     }
+                    if (s.enum.length === 1)
+                    {
+                        input.selectedIndex = 0;
+                    }
                 }
-                if (s.enum.length === 1)
-                    input.selectedIndex = 0;
-                else
-                    $(input).val(selectedIndex);
-                    //console.log($(input).val());
-                    //input.selectedIndex = selectedIndex; Original Line
             } else {
                 input = document.createElement("input");
                 if (s.type === "integer" || s.type === "number") {
